@@ -1,0 +1,256 @@
+int NAH7 = 6;
+int NAH8 = 7;
+int NAH9 = 8;
+int NAH10 = 12;
+int NAH11 = 9;
+int IN1 = 2;
+int IN2 = 3;
+int IN3 = 4;
+int IN4 = 5;
+int ENA = 10;
+int ENB = 11;
+int BUTTON = A0;
+int state = 0; // Trạng thái chương trình (0: Chương trình 1, 1: Chương trình 2)
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(NAH7, INPUT);
+  pinMode(NAH8, INPUT);
+  pinMode(NAH9, INPUT);
+  pinMode(NAH10, INPUT);
+  pinMode(NAH11, INPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  pinMode(ENA, OUTPUT);
+  pinMode(ENB, OUTPUT);
+  pinMode(BUTTON, INPUT); 
+}
+
+void loop() {
+  int trai1 = digitalRead(NAH7);
+  int trai2 = digitalRead(NAH8);
+  int giua = digitalRead(NAH9);
+  int phai2 = digitalRead(NAH10);
+  int phai1 = digitalRead(NAH11);
+  int buttonStatus = digitalRead(BUTTON); 
+  if (state == 0) {
+    // Xử lý chương trình 1
+    if (trai1 == 0 && trai2 == 0 && giua == 0 && phai2 == 0 && phai1 == 0) {
+      state = 1; // Chuyển sang chương trình 2
+      Serial.println("Chương trình 2 mới");
+    }
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+    else if (trai1 == 1 && trai2 == 1 && giua == 0 && phai2 == 1 && phai1 == 1) // 11011 di thang
+{
+    digitalWrite(IN1,LOW);
+    digitalWrite(IN2,HIGH);
+    digitalWrite(IN3,HIGH);
+    digitalWrite(IN4,LOW);
+    analogWrite(ENA, 172);
+    analogWrite(ENB, 200);
+    Serial.println("CT1 - Case 11011");
+    } 
+    
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+    else if (trai1 == 1 && trai2 == 0 && giua == 1 && phai2 == 1 && phai1 == 1) // 10111 re trai 
+    {
+    digitalWrite(IN1,LOW);
+    digitalWrite(IN2,HIGH);
+    digitalWrite(IN3,LOW);
+    digitalWrite(IN4,HIGH);
+    analogWrite(ENA, 200);
+    analogWrite(ENB, 16); 
+    Serial.println("CT1 - Case 10111");
+    }
+    else if ((trai1 == 0 && trai2 == 1 && giua == 1 && phai2 == 1 && phai1 == 1) || // 01111 re trai goc 90 do bang 1CB
+             (trai1 == 1 && trai2 == 0 && giua == 0 && phai2 == 1 && phai1 == 1) || // 10011 re trai goc 90 do bang 2CB
+             (trai1 == 0 && trai2 == 0 && giua == 1 && phai2 == 1 && phai1 == 1) || // 00111 re trai goc 90 do bang 2CB
+             (trai1 == 0 && trai2 == 0 && giua == 0 && phai2 == 1 && phai1 == 1) || // 00011 re trai goc 90 do bang 3CB
+             (trai1 == 0 && trai2 == 0 && giua == 0 && phai2 == 0 && phai1 == 1) // 00011 re trai goc 90 do bang 3CB
+            )
+{
+    digitalWrite(IN1,LOW);
+    digitalWrite(IN2,HIGH);
+    digitalWrite(IN3,LOW);
+    digitalWrite(IN4,HIGH);
+    analogWrite(ENA, 150);
+    analogWrite(ENB, 75); 
+    Serial.println("CT1 - Rẽ trái");
+    }
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+    else if (trai1 == 1 && trai2 == 1 && giua == 1 && phai2 == 0 && phai1 == 1) // 11101 re phai
+    {
+      digitalWrite(IN1,HIGH);
+      digitalWrite(IN2,LOW);
+      digitalWrite(IN3,HIGH);
+      digitalWrite(IN4,LOW);
+      analogWrite(ENA, 16);
+      analogWrite(ENB, 200);
+      Serial.println("CT1 - Case 11101");
+    }
+    else if ((trai1 == 1 && trai2 == 1 && giua == 1 && phai2 == 1 && phai1 == 0) || // 11110 re phai goc 90 do bang 1CB
+             (trai1 == 1 && trai2 == 1 && giua == 1 && phai2 == 0 && phai1 == 0) || // 11100 re phai goc 90 do bang 2CB
+             (trai1 == 1 && trai2 == 1 && giua == 0 && phai2 == 0 && phai1 == 1) || // 11001 re phai goc 90 do bang 2CB
+             (trai1 == 1 && trai2 == 1 && giua == 0 && phai2 == 0 && phai1 == 0) || // 11000  re phai goc 90 do bang 3CB
+             (trai1 == 1 && trai2 == 0 && giua == 0 && phai2 == 0 && phai1 == 0)  // 10000  re phai goc 90 do bang 3CB
+            )
+    {
+      digitalWrite(IN1,HIGH);
+      digitalWrite(IN2,LOW);
+      digitalWrite(IN3,HIGH);
+      digitalWrite(IN4,LOW);
+      analogWrite(ENA, 75);
+      analogWrite(ENB, 150);
+      Serial.println("CT1 - Rẽ phải");
+    }
+} 
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+   else if (state == 1) {
+    Serial.println("Chương trình 2");
+  }
+   if (buttonStatus == HIGH) 
+   {
+//////////////////////////////////////////////////////////////////////////////////////////
+  ////// xuất phát màu xanh
+   if (trai1 == 1 && trai2 == 1 && giua == 0 && phai2 == 1 && phai1 == 1)  // 00011 re trai goc 90 do bang 3CB
+    {
+    digitalWrite(IN1,LOW);
+    digitalWrite(IN2,HIGH);
+    digitalWrite(IN3,HIGH);
+    digitalWrite(IN4,LOW);
+    analogWrite(ENA, 172);
+    analogWrite(ENB, 200);
+    Serial.println("CT2 - P");
+    }
+//////////////////////////////////////////////////////////////////////////////////////////
+    else if (trai1 == 1 && trai2 == 0 && giua == 1 && phai2 == 1 && phai1 == 1) // 10111 re trai 
+    {
+    digitalWrite(IN1,LOW);
+    digitalWrite(IN2,HIGH);
+    digitalWrite(IN3,LOW);
+    digitalWrite(IN4,HIGH);
+    analogWrite(ENA, 200);
+    analogWrite(ENB, 16); 
+    Serial.println("CT2 - P");
+    }
+    else if (trai1 == 1 && trai2 == 1 && giua == 1 && phai2 == 0 && phai1 == 1) // 11101 re phai
+    {
+      digitalWrite(IN1,HIGH);
+      digitalWrite(IN2,LOW);
+      digitalWrite(IN3,HIGH);
+      digitalWrite(IN4,LOW);
+      analogWrite(ENA, 16);
+      analogWrite(ENB, 200);
+      Serial.println("CT2 - P");
+    }
+        else if (trai1 == 1 && trai2 == 1 && giua == 0 && phai2 == 1 && phai1 == 0) // 11011 di thang
+    {
+      digitalWrite(IN1,LOW);
+      digitalWrite(IN2,HIGH);
+      digitalWrite(IN3,HIGH);
+      digitalWrite(IN4,LOW);
+      analogWrite(ENA, 150);
+      analogWrite(ENB, 150); 
+      delay(50);
+    } 
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+    else if (trai1 == 0 && trai2 == 0 && giua == 0 && phai2 == 1 && phai1 == 1) // 11011 di thang
+    {
+      digitalWrite(IN1,LOW);
+      digitalWrite(IN2,HIGH);
+      digitalWrite(IN3,LOW);
+      digitalWrite(IN4,HIGH);
+      analogWrite(ENA, 150);
+      analogWrite(ENB, 50); 
+    } 
+
+    else if ((trai1 == 1 && trai2 == 0 && giua == 0 && phai2 == 0 && phai1 == 1) ||
+             (trai1 == 0 && trai2 == 1 && giua == 0 && phai2 == 1 && phai1 == 1)
+            )
+    {
+      digitalWrite(IN1,LOW);
+      digitalWrite(IN2,HIGH);
+      digitalWrite(IN3,LOW);
+      digitalWrite(IN4,HIGH);
+      analogWrite(ENA, 150);
+      analogWrite(ENB, 50);
+    }
+   }
+   
+  //////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////
+     if (buttonStatus == LOW) // nut nhan tat
+    {
+      if (trai1 == 1 && trai2 == 1 && giua == 0 && phai2 == 1 && phai1 == 1)  // 00011 re trai goc 90 do bang 3CB
+    {
+    digitalWrite(IN1,LOW);
+    digitalWrite(IN2,HIGH);
+    digitalWrite(IN3,HIGH);
+    digitalWrite(IN4,LOW);
+    analogWrite(ENA, 220);
+    analogWrite(ENB, 255);
+    Serial.println("CT2 - T");
+    }
+//////////////////////////////////////////////////////////////////////////////////////////
+    else if (trai1 == 1 && trai2 == 0 && giua == 1 && phai2 == 1 && phai1 == 1) // 10111 re trai 
+    {
+    digitalWrite(IN1,LOW);
+    digitalWrite(IN2,HIGH);
+    digitalWrite(IN3,LOW);
+    digitalWrite(IN4,HIGH);
+    analogWrite(ENA, 255);
+    analogWrite(ENB, 20); 
+    Serial.println("CT2 - T");
+    }
+    else if (trai1 == 1 && trai2 == 1 && giua == 1 && phai2 == 0 && phai1 == 1) // 11101 re phai
+    {
+      digitalWrite(IN1,HIGH);
+      digitalWrite(IN2,LOW);
+      digitalWrite(IN3,HIGH);
+      digitalWrite(IN4,LOW);
+      analogWrite(ENA, 20);
+      analogWrite(ENB, 255);
+      Serial.println("CT2 - T");
+    }
+    else if (trai1 == 0 && trai2 == 1 && giua == 0 && phai2 == 1 && phai1 == 1) // 11011 di thang
+    {
+      digitalWrite(IN1,LOW);
+      digitalWrite(IN2,HIGH);
+      digitalWrite(IN3,HIGH);
+      digitalWrite(IN4,LOW);
+      analogWrite(ENA, 150);
+      analogWrite(ENB, 150); 
+      delay(50);
+    } 
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+    else if (trai1 == 1 && trai2 == 1 && giua == 0 && phai2 == 0 && phai1 == 0) // 11011 di thang
+    {
+      digitalWrite(IN1,HIGH);
+      digitalWrite(IN2,LOW);
+      digitalWrite(IN3,HIGH);
+      digitalWrite(IN4,LOW);
+      analogWrite(ENA, 50);
+      analogWrite(ENB, 150); 
+    } 
+    else if ((trai1 == 1 && trai2 == 0 && giua == 0 && phai2 == 0 && phai1 == 1) ||
+             (trai1 == 0 && trai2 == 1 && giua == 0 && phai2 == 1 && phai1 == 1)
+            )
+    {
+      digitalWrite(IN1,HIGH);
+      digitalWrite(IN2,LOW);
+      digitalWrite(IN3,HIGH);
+      digitalWrite(IN4,LOW);
+      analogWrite(ENA, 50);
+      analogWrite(ENB, 150);
+    }
+}
+}
